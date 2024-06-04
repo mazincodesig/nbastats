@@ -1,0 +1,59 @@
+def the_func():
+    from scipy.stats import norm
+    import math
+    import random
+    name = input("What is the name of your NBA player?\n")
+    game_1 = int(input("How much has your player scored in the last game?\n"))
+    game_2 = int(input("How much has your player scored in the 2nd last game?\n"))
+    game_3 = int(input("How much has your player scored in the 3rd last game?\n"))
+    game_4 = int(input("How much has your player scored in the 4th last game?\n"))
+    game_5 = int(input("How much has your player scored in the 5th last game?\n"))
+    predicted = int(input("How many points do you expect that your player will score at least?\n"))
+    average = (game_1 + game_2 + game_3 + game_4 + game_5)/5
+    print (name, "is currently averaging", round(average, 2), "points per game.")
+
+    sd_1 = (game_1 - average)**2
+    sd_2 = (game_2 - average)**2
+    sd_3 = (game_3 - average)**2
+    sd_4 = (game_4 - average)**2
+    sd_5 = (game_5 - average)**2
+
+    standard = math.sqrt((sd_1 + sd_2 + sd_3 + sd_4 + sd_5)/5)
+    print ("The standard deviation of", name, "'s points per game is", round(standard, 2),".")
+    if standard < 5:
+        print("This is a fairly consistent score-line! The low standard deviation means that this player is a reliable scorer with a low likelihood of ghosting.")
+    if 5 < standard < 10:
+        print("This player's scoring has some variability. This means that they have a decent shot of heavily scoring above their average, but can also not do super well.")
+    if standard > 10:
+        print("This player is wildly inconsistent. While they have a high chance of scoring a ton of points, they can also just as easily underperform. This would be a high-risk player.")
+
+    statty = (1/(standard*math.sqrt(2*math.pi)))
+    zaddy = ((predicted - average)/standard)
+    matty = math.exp((-1/2)*((zaddy)**2))
+    latty = round((statty*matty), 3)
+
+    result = (predicted - average)/(standard)
+    idk = norm.cdf(result)
+    ended = (1-idk)*100
+
+    print("The probability of", name, "scoring", predicted, "is approximately", ended, "percent.")
+    if ended > 75:
+        print("Nice! This would probably be safe odds of success.")
+    if 50 < ended <= 75:
+        print("You have a decent shot! It could go either way.")
+    if 10 < ended <= 50:
+        print("Your odds are lowering, but don't count yourself out! Anything can happen.")
+    if 1 < ended <= 1:
+        print("Yeesh. There is a slight chance, but don't get your hopes up.")
+    if 0 < ended <= 1:
+        print("Tough luck. Even I can't be optimistic about those odds.")
+
+    answa = int(input("Would you like to test your luck with another player? Press 1 if you say yes, or press 0 if you don't. (Pressing 0 will close the program.)\n"))
+    if answa == 0:
+        print("Goodbye!")
+    if answa == 1:
+        print("Alright! Starting over...")
+        the_func()
+
+answa2 = ("Are you ready to start?")
+the_func()
